@@ -1,6 +1,5 @@
 import os
 
-# This gives the full path of taskslist.txt in the same folder as the .py file
 FILE_PATH = os.path.join(os.path.dirname(__file__), "taskslist.txt")
 
 def showMenu():
