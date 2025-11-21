@@ -1,0 +1,15 @@
+Buy groceries,True
+Help me,False
+Clean Room,True
+Thank boyfriend,True
+Gadha,True
+Gadha boyfriend,False
+rondu is cute,True
+rondu is hottie,True
+rondu is idiot,True
+rondu is smiling,True
+rushagadha,True
+rusha gadhi ho,True
+rohan is alikati smart,True
+rohan very dumb,False
+an actual task,False
