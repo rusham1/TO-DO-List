@@ -23,12 +23,13 @@ def loadTasks():
                 else:
                     parts=line.split(',')
                     taskName=parts[0]
-                    print(parts)
-                    taskStatus="Not Complete"
+                    taskStatus='Complete'
                     if len(parts)>0:
                         if parts[1]=="True":
                             taskStatus='Complete'
-                    task.append({"Task":taskName,"Status":taskStatus})
+                        elif parts[1]=="False":
+                            taskStatus="Not Complete"
+                    task.append({'Task':taskName,'Status':taskStatus})
     except FileNotFoundError:
         print("File does not exist.")
     return task
@@ -47,7 +48,15 @@ def saveTasks(tasks):
     
     with open(FILE_PATH,'w') as f:
         for task in tasks:
-            f.write(task+'\n')
+            status = "True" if task['Status'] == "Complete" else "False"
+            f.write(f"{task['Task']},{status}\n")
+def updateTaskStatus(newTaskStatus):
+    if newTaskStatus in ('t','T','1','True','TRUE'):
+        newTaskStatus="True"
+
+    elif newTaskStatus.lower()=="f" or newTaskStatus.lower()=='false':
+        newTaskStatus="False"
+    return newTaskStatus
 
 def main():
     print("\n\n********** TO-DO LIST **********")
@@ -68,27 +77,23 @@ def main():
                 print("\n"*3)
                 print("The tasks are listed below:")
                 for i,t in enumerate(task,start=1):
-                    print(f"{i}. {t["Task"]}:-------->   {t["Status"]}")
+                    print(f"{i}. {t['Task']}:-------->   {t['Status']}")
                 
         elif choice=='2':
             newTask=input("\nEnter the new task to add:\t")
             newTaskStatus=str(input("\nEnter Status: (T/F)\t"))
-            if newTaskStatus in ('t','T','1','True','TRUE'):
-                newTaskStatus="True"
-
-            elif newTaskStatus.lower()=="f" or newTaskStatus.lower()=='false':
-                newTaskStatus="False"
-            saveNewTask(newTask,newTaskStatus)
+            saveNewTask(newTask,updateTaskStatus(newTaskStatus))
 
         elif choice=='3':
             if not task:
                 print("\nEmpty File.")
             else:
-                for i,taskValue in enumerate(task,start=1):
-                    print(f'{i}. {taskValue}')
+                for i,t in enumerate(task,start=1):
+                    print(f"{i}. {t['Task']}:--------->   {t['Status']}")
                 index=int(input("\nEnter the index number of the item to remove:\t"))-1
                 if 0<=index<len(task):
                     removedItem=task.pop(index)
+                    print("popped")
                     saveTasks(task)
                     print(f"The value \"{removedItem}\" is removed.")
                 else:
@@ -97,16 +102,41 @@ def main():
         elif choice=='4':
             if not task:
                 print("\nEmpty File.")
+                
             else:
-                for i,taskValue in enumerate(task,start=1):
-                    print(f'{i}. {taskValue}')
+                for i,t in enumerate(task,start=1):
+                    print(f"{i}. {t['Task']}------->{t['Status']}")
                 index=int(input("\nEnter the index of the task to update:\t"))-1
                 newValue=input("Enter the new task:\t")
-                task[index]=newValue
+                newValueStatus=str(input("Enter the status of the new task:\t"))
+                task[index]['Task']=newValue
+                task[index]['Status']=updateTaskStatus(newValueStatus)  
                 saveTasks(task)
                 print("Task updated")
         
         elif choice=='5':
+            if not task:
+                print("\nEmpty File.\t")
+            else:
+                for i,t in enumerate(task,start=1):
+                    print(f"{i}. {t['Task']}------->{t['Status']}")
+                index=int(input("\nEnter the index of the task to mark complete:\t"))-1
+                task[index]['Status']="True"  
+                saveTasks(task)
+                print("Marked as complete")
+
+        elif choice=='6':
+            if not task:
+                print("\nEmpty File.\t")
+            else:
+                for i,t in enumerate(task,start=1):
+                    print(f"{i}. {t['Task']}------->{t['Status']}")
+                index=int(input("\nEnter the index of the task to mark incomplete:\t"))-1
+                task[index]['Status']="False"  
+                saveTasks(task)
+                print("Marked as incomplete")      
+
+        elif choice=='7':
             task=[]
             saveTasks(task)
 
